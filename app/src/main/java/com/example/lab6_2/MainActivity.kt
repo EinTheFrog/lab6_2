@@ -14,7 +14,6 @@ import java.util.concurrent.Future
 
 
 class MainActivity : AppCompatActivity() {
-    private val executor = Executors.newFixedThreadPool(1)
     private lateinit var future: Future<*>
     private lateinit var binding: ActivityMainBinding
     private val bitmapData = MutableLiveData<Bitmap>()
@@ -38,11 +37,10 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         future.cancel(true)
-
     }
 
     private fun loadImageFromNet(): Future<*> {
-        return executor.submit {
+        return MyApplication.executor.submit {
             val url = URL("https://cdnuploads.aa.com.tr/uploads/Contents/2019/10/24/thumbs_b_c_fb8263ce4f9f43ebdc7634b0d1eb0a08.jpg?v=115427")
             val stream = url.openConnection().getInputStream()
             stream.use {
