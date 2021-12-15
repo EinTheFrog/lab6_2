@@ -17,11 +17,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var future: Future<*>
     private lateinit var binding: ActivityMainBinding
     private val bitmapData = MutableLiveData<Bitmap>()
+    private lateinit var myApp: MyApplication
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        myApp = application as MyApplication
 
         if (binding.imgView.drawable == null) {
             future = loadImageFromNet()
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadImageFromNet(): Future<*> {
-        return MyApplication.executor.submit {
+        return myApp.executor.submit {
             val url = URL("https://cdnuploads.aa.com.tr/uploads/Contents/2019/10/24/thumbs_b_c_fb8263ce4f9f43ebdc7634b0d1eb0a08.jpg?v=115427")
             val stream = url.openConnection().getInputStream()
             stream.use {
