@@ -14,7 +14,7 @@ import java.util.concurrent.Future
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var future: Future<*>
+    private var future: Future<*>? = null
     private lateinit var binding: ActivityMainBinding
     private val bitmapData = MutableLiveData<Bitmap>()
     private lateinit var myApp: MyApplication
@@ -25,20 +25,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         myApp = application as MyApplication
 
-        if (binding.imgView.drawable == null) {
+        if (myApp.imgBitmap == null) {
             future = loadImageFromNet()
+        } else {
+            binding.imgView.setImageBitmap(myApp.imgBitmap)
         }
 
         bitmapData.observe(this) { value ->
             if (value != null) {
                 binding.imgView.setImageBitmap(value)
             }
+            myApp.imgBitmap = value
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        future.cancel(true)
+        future?.cancel(true)
     }
 
     private fun loadImageFromNet(): Future<*> {
